@@ -59,8 +59,6 @@ macd_diff = macd - macd_signal
 data['MACD'] = macd
 data['MACD_Diff'] = macd_diff
 
-print(data)
-
 # Shift the closing prices to create the target variable
 data['Target'] = data['Close'].shift(-1)
 
@@ -75,6 +73,7 @@ y = data['Target']
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.15, random_state=42, shuffle=False
 )
+print(data)
 
 # Standardize the Data
 scaler = StandardScaler()
