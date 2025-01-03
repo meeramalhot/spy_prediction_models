@@ -49,21 +49,17 @@ d = data['Close'].ewm(span=26, adjust=False, min_periods=26).mean()
 # Subtract the 26-day EMA from the 12-Day EMA to get the MACD
 macd = k - d
 
-#optional
 # Get the 9-Day EMA of the MACD for the Trigger line
-#macd_s = macd.ewm(span=9, adjust=False, min_periods=9).mean()
+macd_signal = macd.ewm(span=9, adjust=False, min_periods=9).mean()
+
 # Calculate the difference between the MACD - Trigger for the Convergence/Divergence value
-#macd_h = macd - macd_s
+macd_diff = macd - macd_signal
 
 # Add all of our new values for the MACD to the dataframe
 data['MACD'] = macd
-#data['macd_h'] = macd_h
-#data['macd_s'] = macd_s
+data['MACD_Diff'] = macd_diff
 
 print(data)
-
-data['MACD_Signal'] = macd.macd_signal()
-data['MACD_Diff'] = macd.macd_diff()
 
 # Shift the closing prices to create the target variable
 data['Target'] = data['Close'].shift(-1)
