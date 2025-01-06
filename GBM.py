@@ -1,3 +1,5 @@
+#Gradient Boosting Model for Stock indication
+
 import yfinance as yf
 import pandas as pd
 import numpy as np
@@ -6,11 +8,15 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+from xgboost import XGBRegressor
+
 
 #Download historical stock prices from Yahoo Finance
 #look at spy
 ticker = 'SPY'
 data = yf.download(ticker, start='2021-01-01', end='2024-12-27')
+#data = yf.download(ticker, start='2021-01-01', end='2025-01-01')
+
 
 # Use only the close and vol columns
 data = data[['Close', 'Volume']]
@@ -66,14 +72,19 @@ data['Target'] = data['Close'].shift(-1)
 data = data.dropna()
 
 # Define the feature set and target variable
+#x is everything but target
+#y is target
 X = data.drop('Target', axis=1)
 y = data['Target']
 
+print("this is x")
+print(X)
+print("this is y")
+print(y)
 # Split Data into Training and Test Sets
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.15, random_state=42, shuffle=False
+    X, y, test_size=0.9, random_state=42, shuffle=False
 )
-print(data)
 
 # Standardize the Data
 scaler = StandardScaler()
@@ -81,7 +92,8 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 # Build and Train the Gradient Boosting Model
-model = GradientBoostingRegressor(n_estimators=1000, learning_rate=0.01, max_depth=13, random_state=42)
+model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.08, max_depth=1000, random_state=70)
+#model = XGBRegressor(n_estimators=100000, learning_rate=0.05)
 model.fit(X_train_scaled, y_train)
 
 # Evaluate the Model
