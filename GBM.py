@@ -1,5 +1,4 @@
 #Gradient Boosting Model for Stock indication
-
 import yfinance as yf
 import pandas as pd
 import numpy as np
@@ -9,13 +8,19 @@ from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
 from xgboost import XGBRegressor
+import datetime
 
 
 #Download historical stock prices from Yahoo Finance
-#look at spy
+
+#look at spy within a 4 year timeframe
 ticker = 'SPY'
-data = yf.download(ticker, start='2021-01-01', end='2024-12-27')
-#data = yf.download(ticker, start='2021-01-01', end='2025-01-01')
+time = datetime.datetime.now()
+end_time = time.strftime("%Y") + "-" + time.strftime("%m") + "-" + time.strftime("%d")
+old_year = int(time.strftime("%Y")) - 4
+start_time = str(old_year) + "-" + time.strftime("%m") + "-" + time.strftime("%d")
+
+data = yf.download(ticker, start=start_time, end=end_time)
 
 
 # Use only the close and vol columns
@@ -85,6 +90,8 @@ print(y)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.9, random_state=42, shuffle=False
 )
+print("x_test is")
+print(X_test)
 
 # Standardize the Data
 scaler = StandardScaler()
@@ -93,7 +100,7 @@ X_test_scaled = scaler.transform(X_test)
 
 # Build and Train the Gradient Boosting Model
 model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.08, max_depth=1000, random_state=70)
-#model = XGBRegressor(n_estimators=100000, learning_rate=0.05)
+#model = XGBRegressor(n_estimators=10000, learning_rate=0.05)
 model.fit(X_train_scaled, y_train)
 
 # Evaluate the Model
@@ -112,8 +119,13 @@ def plot_predictions(actual, predicted):
     plt.legend()
     plt.show()
 
+
 # Plot predictions
 plot_predictions(y_test, y_pred)
+print("y_test:")
+print(y_test)
+print("y_pred:")
+print(y_pred)
 
 # Deviance Plot
 test_score = np.zeros(model.n_estimators, dtype=np.float64)
