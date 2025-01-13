@@ -1,4 +1,5 @@
 #Gradient Boosting Model for Stock indication
+import datetime
 import yfinance as yf
 import pandas as pd
 import numpy as np
@@ -7,17 +8,15 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 import matplotlib.pyplot as plt
+from sklearn.impute import SimpleImputer
 from xgboost import XGBRegressor
-import datetime
-
 
 #Download historical stock prices from Yahoo Finance
-
 #look at spy within a 4 year timeframe
 ticker = 'SPY'
 time = datetime.datetime.now()
 end_time = time.strftime("%Y") + "-" + time.strftime("%m") + "-" + time.strftime("%d")
-old_year = int(time.strftime("%Y")) - 4
+old_year = int(time.strftime("%Y")) - 2
 start_time = str(old_year) + "-" + time.strftime("%m") + "-" + time.strftime("%d")
 
 data = yf.download(ticker, start=start_time, end=end_time)
@@ -82,10 +81,6 @@ data = data.dropna()
 X = data.drop('Target', axis=1)
 y = data['Target']
 
-print("this is x")
-print(X)
-print("this is y")
-print(y)
 # Split Data into Training and Test Sets
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.9, random_state=42, shuffle=False
@@ -94,13 +89,17 @@ print("x_test is")
 print(X_test)
 
 # Standardize the Data
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
+my_imputer = SimpleImputer()
+#scaler = StandardScaler()
+#X_train_scaled = scaler.fit_transform(X_train)
+X_train_scaled = my_imputer.fit_transform(X_train)
+X_test_scaled = my_imputer.transform(X_test)
+#X_test_scaled = scaler.transform(X_test)
 
 # Build and Train the Gradient Boosting Model
-model = GradientBoostingRegressor(n_estimators=100, learning_rate=0.08, max_depth=1000, random_state=70)
-#model = XGBRegressor(n_estimators=10000, learning_rate=0.05)
+#model = GradientBoostingRegressor(n_estimators=10000, learning_rate=0.01, max_depth=3, random_state=42)
+model = XGBRegressor(n_estimators=10000, learning_rate=0.05, max_depth=3,                                                       early_stopping_rounds = 5)
+
 model.fit(X_train_scaled, y_train)
 
 # Evaluate the Model
@@ -122,10 +121,6 @@ def plot_predictions(actual, predicted):
 
 # Plot predictions
 plot_predictions(y_test, y_pred)
-print("y_test:")
-print(y_test)
-print("y_pred:")
-print(y_pred)
 
 # Deviance Plot
 test_score = np.zeros(model.n_estimators, dtype=np.float64)
