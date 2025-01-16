@@ -90,15 +90,13 @@ print(X_test)
 
 # Standardize the Data
 my_imputer = SimpleImputer()
-#scaler = StandardScaler()
-#X_train_scaled = scaler.fit_transform(X_train)
-X_train_scaled = my_imputer.fit_transform(X_train)
-X_test_scaled = my_imputer.transform(X_test)
-#X_test_scaled = scaler.transform(X_test)
+scaler = StandardScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
 
 # Build and Train the Gradient Boosting Model
-#model = GradientBoostingRegressor(n_estimators=10000, learning_rate=0.01, max_depth=3, random_state=42)
-model = XGBRegressor(n_estimators=10000, learning_rate=0.05, max_depth=3,                                                       early_stopping_rounds = 5)
+model = GradientBoostingRegressor(n_estimators=10000, learning_rate=0.01, max_depth=3, random_state=42)
+#model = XGBRegressor(n_estimators=10000, learning_rate=0.05, max_depth=3,                                                       early_stopping_rounds = 5)
 
 model.fit(X_train_scaled, y_train)
 
