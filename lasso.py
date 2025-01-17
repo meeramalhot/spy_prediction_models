@@ -100,6 +100,9 @@ latest_features_scaled = scaler.transform(latest_features)
 lasso_pred_tomorrow = lasso.predict(latest_features_scaled)
 ridge_pred_tomorrow = ridge.predict(latest_features_scaled)
 
+final_avg = ( lasso_pred_tomorrow + ridge_pred_tomorrow ) / 2
+
 print(f"\nPredicted closing price for {ticker} on the next trading day:")
 print(f"Lasso Regression Prediction: ${lasso_pred_tomorrow[0]:.2f}")
 print(f"Ridge Regression Prediction: ${ridge_pred_tomorrow[0]:.2f}")
+print(f"Avg Between the Two: ${final_avg[0]:.2f}")
