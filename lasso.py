@@ -103,8 +103,9 @@ ridge_pred_tomorrow = ridge.predict(latest_features_scaled)
 latest_close_price = latest_data['Close']
 
 # Predicting whether the stock price will go up or down
-print(lasso_pred_tomorrow[0])
-print(latest_close_price)
+
+latest_close_price = latest_close_price.iloc[-1]
+
 lasso_movement = "UP" if lasso_pred_tomorrow[0] > latest_close_price else "DOWN"
 ridge_movement = "UP" if ridge_pred_tomorrow[0] > latest_close_price else "DOWN"
 
