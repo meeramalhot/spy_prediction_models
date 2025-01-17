@@ -100,9 +100,21 @@ latest_features_scaled = scaler.transform(latest_features)
 lasso_pred_tomorrow = lasso.predict(latest_features_scaled)
 ridge_pred_tomorrow = ridge.predict(latest_features_scaled)
 
+latest_close_price = latest_data['Close']
+
+# Predicting whether the stock price will go up or down
+print(lasso_pred_tomorrow[0])
+print(latest_close_price)
+lasso_movement = "UP" if lasso_pred_tomorrow[0] > latest_close_price else "DOWN"
+ridge_movement = "UP" if ridge_pred_tomorrow[0] > latest_close_price else "DOWN"
+
+print(f"\nBased on Lasso Regression, the stock price is predicted to go {lasso_movement}.")
+print(f"Based on Ridge Regression, the stock price is predicted to go {ridge_movement}.")
+
 final_avg = ( lasso_pred_tomorrow + ridge_pred_tomorrow ) / 2
 
 print(f"\nPredicted closing price for {ticker} on the next trading day:")
 print(f"Lasso Regression Prediction: ${lasso_pred_tomorrow[0]:.2f}")
 print(f"Ridge Regression Prediction: ${ridge_pred_tomorrow[0]:.2f}")
 print(f"Avg Between the Two: ${final_avg[0]:.2f}")
+
