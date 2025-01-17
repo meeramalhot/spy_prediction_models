@@ -86,3 +86,20 @@ plt.xlabel('Time')
 plt.ylabel('Price')
 plt.legend()
 plt.show()
+
+# Get the latest available data point
+latest_data = df.iloc[-1]
+
+# Prepare the features for prediction
+latest_features = latest_data[features].values.reshape(1, -1)
+
+# Scale the features
+latest_features_scaled = scaler.transform(latest_features)
+
+# Make predictions for the next trading day
+lasso_pred_tomorrow = lasso.predict(latest_features_scaled)
+ridge_pred_tomorrow = ridge.predict(latest_features_scaled)
+
+print(f"\nPredicted closing price for {ticker} on the next trading day:")
+print(f"Lasso Regression Prediction: ${lasso_pred_tomorrow[0]:.2f}")
+print(f"Ridge Regression Prediction: ${ridge_pred_tomorrow[0]:.2f}")

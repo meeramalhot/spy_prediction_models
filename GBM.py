@@ -16,7 +16,7 @@ from xgboost import XGBRegressor
 ticker = 'SPY'
 time = datetime.datetime.now()
 end_time = time.strftime("%Y") + "-" + time.strftime("%m") + "-" + time.strftime("%d")
-old_year = int(time.strftime("%Y")) - 2
+old_year = int(time.strftime("%Y")) - 4
 start_time = str(old_year) + "-" + time.strftime("%m") + "-" + time.strftime("%d")
 
 data = yf.download(ticker, start=start_time, end=end_time)
