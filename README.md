@@ -1,1 +1,1 @@
-# Different Models to Look at SPY Predictions
+# Different Models for Next Day SPY Predictions
