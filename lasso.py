@@ -18,13 +18,20 @@ warnings.filterwarnings('ignore')
 
 # Fetch historical stock data
 ticker = 'SPY'  # You can change this to any ticker symbol you like
-time = datetime.datetime.now()
-end_time = time.strftime("%Y") + "-" + time.strftime("%m") + "-" + time.strftime("%d")
-old_year = int(time.strftime("%Y")) - 10
-start_time = str(old_year) + "-" + time.strftime("%m") + "-" + time.strftime("%d")
+# Get today's date and then compute yesterday's date
+today = datetime.datetime.now()
+end_time = today.strftime("%Y-%m-%d")
+print(end_time)
+
+# Set the start time to 10 years ago using the current month and day
+old_year = today.year - 10
+start_time = datetime.datetime(old_year, today.month, today.day).strftime("%Y-%m-%d")
+
+# Download data from start_time to end_time (which is yesterday)
+df = yf.download(ticker, start=start_time, end=end_time)
 
 # Download data
-df = yf.download(ticker, start="start_time", end="end_time")
+df = yf.download(ticker, start=start_time, end=end_time)
 
 # Create moving averages
 df['MA5'] = df['Close'].rolling(window=5).mean()
