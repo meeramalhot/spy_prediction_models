@@ -24,7 +24,7 @@ old_year = int(time.strftime("%Y")) - 10
 start_time = str(old_year) + "-" + time.strftime("%m") + "-" + time.strftime("%d")
 
 # Download data
-df = yf.download(ticker, start=start_time, end=end_time)
+df = yf.download(ticker, start="start_time", end="end_time")
 
 # Create moving averages
 df['MA5'] = df['Close'].rolling(window=5).mean()
@@ -42,6 +42,7 @@ df.dropna(inplace=True)
 features = ['Close', 'MA5', 'MA10', 'MA20', 'MA50', 'Volume']
 X = df[features]
 y = df['Future_Close']
+print(X)
 
 # Split data into training and test sets (80% training, 20% testing)
 split_index = int(len(df) * 0.8)
